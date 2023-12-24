@@ -10,19 +10,25 @@ if not mt5.initialize():
 # Lista de ativos
 #ativos = ["PETR4",]
 
-df_empresas = pd.read_excel(r'G:\Meu Drive\3. Finanças e Investimentos\Algo Trading\Estrategias\2 - RSI Simples\acoesfiltradas.xlsx', header=0, usecols="A")
+df_empresas = pd.read_excel(r'G:\\Meu Drive\\3. Finanças e Investimentos\\Códigos e Scripts\\acoesfiltradas.xlsx', header=0, usecols="A")
 ativos = df_empresas['Codigo'].tolist()
 
 performance_metrics = []
-RSI_ENTRADA = 50
-RSI_SAIDA = 80
+RSI_ENTRADA = 30
+RSI_SAIDA = 60
 PERIODO = 14
+time_frame = "M5"
+trade_durations = []
+average_duration = []
+data_inicial = datetime.now()
+data_final = datetime(2023, 1, 1)
+timeframe_enum = eval("mt5.TIMEFRAME_" + time_frame)
 
 for ativo in ativos:
     try:
         data_inicial = datetime.now()
 
-        rates = mt5.copy_rates_from(ativo, mt5.TIMEFRAME_M5, data_inicial, 8000000)
+        rates = mt5.copy_rates_range(ativo, timeframe_enum, data_final, data_inicial)
  
         rates_frame = pd.DataFrame(rates)
         rates_frame['time'] = pd.to_datetime(rates_frame['time'], unit='s')
@@ -59,18 +65,28 @@ for ativo in ativos:
             elif position == 1 and row['Sell_Signal']:
                 position = 0
                 exit_index = rates_frame.index.get_loc(index) + 1  # Próximo índice após o sinal de venda
-                exit_price = rates_frame.loc[rates_frame.index[exit_index], 'open']
-                exit_date = rates_frame.index[exit_index]
+
+                if exit_index < len(rates_frame.index):
+                    exit_price = rates_frame.loc[rates_frame.index[exit_index], 'open']
+                    exit_date = rates_frame.index[exit_index]
+                else:
+                    # Se exit_index for maior que o tamanho do DataFrame, use o último dado disponível
+                    exit_price = rates_frame['open'].iloc[-1]
+                    exit_date = rates_frame.index[-1]
+
                 strategy_return = (exit_price / entry_price) - 1
                 trade_records.append({
                     'Entry_Date': entry_date,
                     'Exit_Date': exit_date,  # Deve ser igual a exit_index
-                    'Profit': strategy_return
+                    'Profit': strategy_return,
+                    'Duration': exit_index - entry_index
                 })
+                trade_durations.append(exit_index - entry_index)  # Adicionar a duração ao final da lista
                 rates_frame.at[index, 'Strategy_Return'] = strategy_return
 
 
         # Imprima os retornos acumulados da estratégia
+        average_duration = sum(trade_durations) / len(trade_durations) if trade_durations else 0
         total_return = rates_frame['Strategy_Return'].sum()
         total_trades = len(trade_records)
         winning_trades = len([trade for trade in trade_records if trade['Profit'] > 0])
@@ -96,6 +112,7 @@ for ativo in ativos:
             'Média de perda por operação': average_loss * 100,
             'Retorno médio por operação': average_profit_per_trade * 100,
             'Retorno usando Buy and Hold': buy_and_hold_return,
+            'Média de Duração': average_duration 
         })
 
         # Imprimir informações sobre o desempenho da estratégia
@@ -120,4 +137,4 @@ for ativo in ativos:
 performance_df = pd.DataFrame(performance_metrics)
 
 # Exportar DataFrame para Excel
-performance_df.to_excel(f"RSI_simples_Intra_{RSI_ENTRADA}_{RSI_SAIDA}_M5.xlsx", index=False)
+performance_df.to_excel(f"RSI_simples_Intra_{RSI_ENTRADA}_{RSI_SAIDA}_{time_frame}_2023.xlsx", index=False)
