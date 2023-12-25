@@ -10,20 +10,26 @@ if not mt5.initialize():
 # Lista de ativos
 #ativos = ["PETR4",]
 
-df_empresas = pd.read_excel(r'G:\Meu Drive\3. Finanças e Investimentos\Algo Trading\Estrategias\2 - RSI Simples\acoesfiltradas.xlsx', header=0, usecols="A")
+df_empresas = pd.read_excel(r'G:\\Meu Drive\\3. Finanças e Investimentos\\Códigos e Scripts\\topnegociadas.xlsx', header=0, usecols="A")
 ativos = df_empresas['Codigo'].tolist()
 
 performance_metrics = []
 RSI_ENTRADA = 30
-RSI_SAIDA = 60
+RSI_SAIDA = 50
 PERIODO = 14
-stop_loss = -0.02  # Exemplo: stop loss de 2%
+time_frame = "M5"
+trade_durations = []
+average_duration = []
+data_inicial = datetime.now()
+data_final = datetime(2023, 1, 1)
+timeframe_enum = eval("mt5.TIMEFRAME_" + time_frame)
+stop_loss = -0.01  # Exemplo: stop loss de 2%
 
 for ativo in ativos:
     try:
         data_inicial = datetime.now()
 
-        rates = mt5.copy_rates_from(ativo, mt5.TIMEFRAME_H1, data_inicial, 8000000)
+        rates = mt5.copy_rates_range(ativo, timeframe_enum, data_final, data_inicial)
  
         rates_frame = pd.DataFrame(rates)
         rates_frame['time'] = pd.to_datetime(rates_frame['time'], unit='s')
@@ -60,8 +66,15 @@ for ativo in ativos:
             elif position == 1 and (row['Sell_Signal'] or (row['close'] / entry_price - 1) < stop_loss):
                 position = 0
                 exit_index = rates_frame.index.get_loc(index) + 1  # Próximo índice após o sinal de venda
-                exit_price = rates_frame.loc[rates_frame.index[exit_index], 'open']
-                exit_date = rates_frame.index[exit_index]
+
+                if exit_index < len(rates_frame.index):
+                    exit_price = rates_frame.loc[rates_frame.index[exit_index], 'open']
+                    exit_date = rates_frame.index[exit_index]
+                else:
+                    # Se exit_index for maior que o tamanho do DataFrame, use o último dado disponível
+                    exit_price = rates_frame['open'].iloc[-1]
+                    exit_date = rates_frame.index[-1]
+
                 strategy_return = (exit_price / entry_price) - 1
                 trade_records.append({
                     'Entry_Date': entry_date,
@@ -121,4 +134,4 @@ for ativo in ativos:
 performance_df = pd.DataFrame(performance_metrics)
 
 # Exportar DataFrame para Excel
-performance_df.to_excel(f"RSI_simples_Intra_com_STOP_15_{RSI_ENTRADA}_{RSI_SAIDA}_H1.xlsx", index=False)
+performance_df.to_excel(f"RSI_simples_Intra_com_STOP_1_{RSI_ENTRADA}_{RSI_SAIDA}_{time_frame}_2023.xlsx", index=False)
