@@ -79,12 +79,15 @@ for ativo in ativos:
                 trade_records.append({
                     'Entry_Date': entry_date,
                     'Exit_Date': exit_date,  # Deve ser igual a exit_index
-                    'Profit': strategy_return
+                    'Profit': strategy_return,
+                    'Duration': exit_index - entry_index
                 })
+                trade_durations.append(exit_index - entry_index)
                 rates_frame.at[index, 'Strategy_Return'] = strategy_return
 
 
         # Imprima os retornos acumulados da estratégia
+        average_duration = sum(trade_durations) / len(trade_durations) if trade_durations else 0
         total_return = rates_frame['Strategy_Return'].sum()
         total_trades = len(trade_records)
         winning_trades = len([trade for trade in trade_records if trade['Profit'] > 0])
@@ -110,6 +113,7 @@ for ativo in ativos:
             'Média de perda por op': average_loss * 100,
             'Retorno médio por op': average_profit_per_trade * 100,
             'Buy and Hold': buy_and_hold_return,
+            'Média de Duração': average_duration 
         })
 
         # Imprimir informações sobre o desempenho da estratégia
