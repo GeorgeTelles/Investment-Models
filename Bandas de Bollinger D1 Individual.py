@@ -66,15 +66,15 @@ average_profit_per_trade = total_return / total_trades if total_trades > 0 else 
 buy_and_hold_return = (rates_frame['Close'].iloc[-1] / rates_frame['Close'].iloc[0] - 1) * 100
 
 # Imprimir informações sobre o desempenho da estratégia
-print('Retorno total da estratégia: {:.2f}%'.format(total_return * 100))
-print(f"Total de operações: {total_trades}")
-print(f"Operações vencedoras: {winning_trades}")
-print(f"Operações perdedoras: {losing_trades}")
-print(f"Percentual de operações vencedoras: {winning_trades / total_trades * 100:.2f}%")
-print(f"Média de ganho por operação: {average_gain * 100:.2f}%")
-print(f"Média de perda por operação: {average_loss * 100:.2f}%")
-print(f"Retorno médio por operação: {average_profit_per_trade * 100:.2f}%")
-print(f"Retorno usando Buy and Hold: {buy_and_hold_return:.2f}%")
+print('Retorno: {:.2f}%'.format(total_return * 100))
+print(f"Total de op: {total_trades}")
+print(f"Op vencedoras: {winning_trades}")
+print(f"Op perdedoras: {losing_trades}")
+print(f"Percentual de op vencedoras: {winning_trades / total_trades * 100:.2f}%")
+print(f"Média de ganho por op: {average_gain * 100:.2f}%")
+print(f"Média de perda por op: {average_loss * 100:.2f}%")
+print(f"Retorno médio por op: {average_profit_per_trade * 100:.2f}%")
+print(f"Buy and Hold: {buy_and_hold_return:.2f}%")
 
 
 # Imprimir as datas de compra, venda e o lucro de cada operação
