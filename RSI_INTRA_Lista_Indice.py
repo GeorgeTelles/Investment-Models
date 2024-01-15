@@ -17,12 +17,16 @@ performance_metrics = []
 RSI_ENTRADA = 20
 RSI_SAIDA = 50
 PERIODO = 14
+time_frame = "M5"
+data_inicial = datetime.now()
+data_final = datetime(2023, 1, 1)
+timeframe_enum = eval("mt5.TIMEFRAME_" + time_frame)
 
 for ativo in ativos:
     try:
         data_inicial = datetime.now()
 
-        rates = mt5.copy_rates_from(ativo, mt5.TIMEFRAME_M1, data_inicial, 8000000)
+        rates = mt5.copy_rates_range(ativo, timeframe_enum, data_final, data_inicial)
  
         rates_frame = pd.DataFrame(rates)
         rates_frame['time'] = pd.to_datetime(rates_frame['time'], unit='s')
@@ -88,7 +92,7 @@ for ativo in ativos:
 
         performance_metrics.append({
             'Ativo': ativo,
-            'Retorno total da estratégia': total_return,
+            'Retorno': (total_return)-(total_trades * 0.024),
             'Total de operações': total_trades,
             'Operações vencedoras': winning_trades,
             'Operações perdedoras': losing_trades,
