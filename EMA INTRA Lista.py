@@ -116,7 +116,7 @@ for ativo in ativos:
             'Média de ganho por op': average_gain * 100,
             'Média de perda por op': average_loss * 100,
             'Retorno médio por op': average_profit_per_trade * 100,
-            'Retorno BuyandHold': buy_and_hold_return,
+            'BuyandHold': buy_and_hold_return,
             'Média de Duração': average_duration 
         })
 
