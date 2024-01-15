@@ -106,15 +106,15 @@ for ativo in ativos:
 
         performance_metrics.append({
             'Ativo': ativo,
-            'Retorno total da estratégia': total_return,
-            'Total de operações': total_trades,
-            'Operações vencedoras': winning_trades,
-            'Operações perdedoras': losing_trades,
-            'Percentual de operações vencedoras': winning_trades / total_trades * 100,
-            'Média de ganho por operação': average_gain,
-            'Média de perda por operação': average_loss,
-            'Retorno médio por operação': average_profit_per_trade,
-            'Retorno usando Buy and Hold': buy_and_hold_return,
+            'Retorno': (total_return * 100)-(total_trades * 0.024),
+            'Total de op': total_trades,
+            'Op vencedoras': winning_trades,
+            'Ops perdedoras': losing_trades,
+            'Percentual vencedoras': winning_trades / total_trades * 100,
+            'Média de ganho por op': average_gain,
+            'Média de perda por op': average_loss,
+            'Retorno médio por op': average_profit_per_trade,
+            'Buy and Hold': buy_and_hold_return,
         })
 
         # Imprimir informações sobre o desempenho da estratégia
