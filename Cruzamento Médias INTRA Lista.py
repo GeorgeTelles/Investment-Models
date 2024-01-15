@@ -17,12 +17,16 @@ performance_metrics = []
 PERIODO_MM1 = 9
 PERIODO_MM2 = 21
 LUCROMINIMO = 120
+time_frame = "M5"
+data_inicial = datetime.now()
+data_final = datetime(2023, 1, 1)
+timeframe_enum = eval("mt5.TIMEFRAME_" + time_frame)
 
 for ativo in ativos:
     try:
         data_inicial = datetime.now()
 
-        rates = mt5.copy_rates_from(ativo, mt5.TIMEFRAME_M15, data_inicial, 8000000)
+        rates = mt5.copy_rates_range(ativo, timeframe_enum, data_final, data_inicial)
  
         rates_frame = pd.DataFrame(rates)
         rates_frame['time'] = pd.to_datetime(rates_frame['time'], unit='s')
@@ -101,15 +105,15 @@ for ativo in ativos:
 
         performance_metrics.append({
             'Ativo': ativo,
-            'Retorno total da estratégia': total_return * 100,
-            'Total de operações': total_trades,
-            'Operações vencedoras': winning_trades,
-            'Operações perdedoras': losing_trades,
-            'Percentual de operações vencedoras': winning_trades / total_trades * 100,
-            'Média de ganho por operação': average_gain * 100,
-            'Média de perda por operação': average_loss * 100,
-            'Retorno médio por operação': average_profit_per_trade * 100,
-            'Retorno usando Buy and Hold': buy_and_hold_return,
+            'Retorno': (total_return * 100)-(total_trades * 0.024),
+            'Total de op': total_trades,
+            'Op vencedoras': winning_trades,
+            'Op perdedoras': losing_trades,
+            'Percentual vencedoras': winning_trades / total_trades * 100,
+            'Média de ganho por op': average_gain * 100,
+            'Média de perda por op': average_loss * 100,
+            'Retorno médio por op': average_profit_per_trade * 100,
+            'Buy and Hold': buy_and_hold_return,
         })
 
         # Imprimir informações sobre o desempenho da estratégia
