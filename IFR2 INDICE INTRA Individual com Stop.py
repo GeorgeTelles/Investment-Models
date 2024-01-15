@@ -16,10 +16,12 @@ RSI_ENTRADA = 5
 RSI_SAIDA = 70
 LUCROMINIMO = 120
 STOPLOSS = -150
-
+time_frame = "M5"
 data_inicial = datetime.now()
+data_final = datetime(2023, 1, 1)
+timeframe_enum = eval("mt5.TIMEFRAME_" + time_frame)
 
-rates = mt5.copy_rates_from(ativo, mt5.TIMEFRAME_M15, data_inicial, 800000)
+rates = mt5.copy_rates_range(ativo, timeframe_enum, data_final, data_inicial)
  
 rates_frame = pd.DataFrame(rates)
 rates_frame['time'] = pd.to_datetime(rates_frame['time'], unit='s')
