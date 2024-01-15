@@ -104,11 +104,11 @@ for ativo in ativos:
 
         performance_metrics.append({
             'Ativo': ativo,
-            'Retorno': total_return * 100,
+            'Retorno': (total_return * 100)-(total_trades * 0.024),
             'Total de op': total_trades,
             'Op vencedoras': winning_trades,
             'Op perdedoras': losing_trades,
-            'Percentual de op vencedoras': winning_trades / total_trades * 100,
+            'Percentual vencedoras': winning_trades / total_trades * 100,
             'Média de ganho por op': average_gain * 100,
             'Média de perda por op': average_loss * 100,
             'Retorno médio por op': average_profit_per_trade * 100,
