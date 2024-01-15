@@ -114,7 +114,6 @@ for ativo in ativos:
             'Média de perda por op': average_loss * 100,
             'Retorno médio por op': average_profit_per_trade * 100,
             'Buy and Hold': buy_and_hold_return,
-            'Média de Duração': average_duration 
         })
 
         # Imprimir informações sobre o desempenho da estratégia
