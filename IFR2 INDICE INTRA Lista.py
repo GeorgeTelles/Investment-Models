@@ -106,7 +106,7 @@ for ativo in ativos:
 
         performance_metrics.append({
             'Ativo': ativo,
-            'Retorno': (total_return * 100)-(total_trades * 0.024),
+            'Retorno': total_return - (total_trades * 5),
             'Total de op': total_trades,
             'Op vencedoras': winning_trades,
             'Ops perdedoras': losing_trades,
