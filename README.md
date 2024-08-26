@@ -3,7 +3,7 @@
   <img src="https://raw.githubusercontent.com/GeorgeTelles/georgetelles/f69531ec6b293b5148563588a764c010015d315e/logo_dark.png" alt="logo dark" width="300" style="display: inline-block; vertical-align: top;">
 </div>
 
-# Investment-Models
+# Investment Models
 
 ## Description
 
